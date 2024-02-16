@@ -1,0 +1,279 @@
+################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+*.vs
+
+# Visual Studio Code
+.vscode/
+obj/
+bin/
+.output
+
+
+
+# Rider
+.idea/
+
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+
+# Mono Auto Generated Files
+mono_crash.*
+
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+
+# Folder config file
+Desktop.ini
+
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+
+# VS Code directories
+.vscode/
+
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+
+# Windows shortcuts
+*.lnk
+
+
+# JetBrains Rider
+.idea/
+
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+
+# Mono Auto Generated Files
+mono_crash.*
+
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+
+# Folder config file
+Desktop.ini
+
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+
+# VS Code directories
+.vscode/
+
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+
+# Windows shortcuts
+*.lnk
+
+
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
+*.o
+*.a
+*.lib
+*.so
+*.so.[0-9]
+*.dylib
+
+
+# Compiled Dynamic libraries (Windows)
+*.dll
+*.pdb
+*.exe
+
+
+# Compiled Static libraries (Windows)
+*.lib
+*.exp
+
+
+# Executables
+*.app
+*.exe
+*.jar
+*.msi
+*.ipa
+*.apk
+*.xap
+
+
+# Logs
+*.logs
+
+
+# Package Files
+*.7z
+*.appx
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.xpi
+*.zip
+
+
+# Precompiled Headers
+*.gch
+*.pch
+
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+CMakeScripts/
+Testing/
+
+
+# Package dependency files
+*.gem
+*.lock
+*.pom
+
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+
+# Visual Studio
+*.aps
+*.ncb
+*.opendb
+*.sdf
+*.cachefile
+*.VC.db
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+
+# Xcode
+*.xcworkspace/
+*.xcuserstate
+project.xcworkspace/
+
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+
+# JetBrains Rider
+.idea/
+
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+
+# Mono Auto Generated Files
+mono_crash.*
+
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+
+# Folder config file
+Desktop.ini
+
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+
+# VS Code directories
+.vscode/
+
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+
+# Windows shortcuts
+*.lnk
+
+
+# JetBrains Rider
+.idea/
+
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+
+# Mono Auto Generated Files
+mono_crash.*
+
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+
+# Folder config file
+Desktop.ini
+
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+
+# VS Code directories
+.vscode/
+
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+
+# Windows shortcuts
+*.lnk
