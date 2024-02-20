@@ -19,22 +19,30 @@ namespace Mango.Services.AuthAPI.Service
             _roleManager = roleManager;
         }
 
-        public Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
+        public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
         {
-            throw new NotImplementedException();
-        }
+            var user = _db.ApplicationUsers.FirstOrDefault(u => u.UserName.ToLower() == loginRequestDto.UserName.ToLower());
+            bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDto.Password);
+            if (user == null || isValid == false)
+            {
+                return new LoginResponseDto() { User = null, Token = "" };
+            }
+            //If user was found, Generate JWT Token
 
-        //public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
-        //{
-        //    return new UnhandledExceptionEventArgs(loginRequestDto);
-        //    //var user = _db.ApplicationUsers.FirstOrDefault(u=>u.UserName.ToLower()==loginRequestDto.UserName.ToLower());
-        //    //bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDto.Password);
-        //    //if(user == null || isValid==false)
-        //    //{
-        //    //    return new LoginResponseDto() { User = null, Token = "" };
-        //    //}
-        //    ////If user was found
-        //}
+            UserDto userDto = new()
+            {
+                Email = user.Email,
+                ID = user.Id,
+                Name = user.Name,
+                PhoneNumber = user.PhoneNumber
+            };
+            LoginResponseDto loginResponseDto = new LoginResponseDto()
+            {
+                User = userDto,
+                Token = ""
+            };
+            return loginResponseDto;
+        }
 
         public async Task<string> Register(RegistrationRequestDto registrationRequestDto)
         {
