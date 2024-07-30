@@ -5,6 +5,7 @@ using Mango.Services.CouponAPI.Models.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StackExchange.Redis;
 
 namespace Mango.Services.CouponAPI.Controllers
 {
@@ -16,12 +17,38 @@ namespace Mango.Services.CouponAPI.Controllers
         private readonly AppDbContext _db;
         private ResponseDto _response;
         private IMapper _mapper;
-        public CouponAPIController(AppDbContext db, IMapper mapper)
+        private readonly IConnectionMultiplexer _redis;
+        public CouponAPIController(AppDbContext db, IMapper mapper, IConnectionMultiplexer redis)
         {
             _db = db;
             _response = new ResponseDto();
             _mapper = mapper;
+            _redis = redis;
         }
+
+        [HttpGet("GetThroughRedis")]
+        public ResponseDto GetThroughRedis()
+        {
+            var db = _redis.GetDatabase();
+
+            //redis cache key
+            string redisKey = "redisKey";
+
+            //Set a cache value
+            db.StringSet(redisKey, "Hello Redis");
+
+            //Get the Cache Value
+            var value = db.StringGet(redisKey);
+
+            //set cache with expiration time
+            db.StringSet(redisKey, "Hello Redis", TimeSpan.FromMinutes(5));
+
+            //remove cache
+            db.KeyDelete(redisKey);
+
+            return _response;
+        }
+
 
         [HttpGet]
         public ResponseDto Get()
