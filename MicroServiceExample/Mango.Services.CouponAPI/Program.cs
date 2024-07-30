@@ -26,7 +26,11 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 //----------------------Start: Implement Redis Cachce-------------------------------------------------
 builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("localhost:6379"));
-//----------------------End: Implement Redis Cachce-------------------------------------------------
+//----------------------End: Implement Redis Cachce---------------------------------------------------
+
+//----------------------Start: Implement In-Memory Cache-----------------------------------------------
+builder.Services.AddMemoryCache();
+//----------------------End: Implement In-Memory Cache-------------------------------------------------
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

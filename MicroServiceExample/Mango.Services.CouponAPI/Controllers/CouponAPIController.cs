@@ -5,6 +5,8 @@ using Mango.Services.CouponAPI.Models.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Caching.Memory;
 using StackExchange.Redis;
 
 namespace Mango.Services.CouponAPI.Controllers
@@ -18,12 +20,16 @@ namespace Mango.Services.CouponAPI.Controllers
         private ResponseDto _response;
         private IMapper _mapper;
         private readonly IConnectionMultiplexer _redis;
-        public CouponAPIController(AppDbContext db, IMapper mapper, IConnectionMultiplexer redis)
+        private readonly IMemoryCache _cache;
+        public CouponAPIController(AppDbContext db, IMapper mapper, 
+            IConnectionMultiplexer redis, 
+            IMemoryCache cache)
         {
             _db = db;
             _response = new ResponseDto();
             _mapper = mapper;
             _redis = redis;
+            _cache = cache;
         }
 
         [HttpGet("GetThroughRedis")]
@@ -53,17 +59,39 @@ namespace Mango.Services.CouponAPI.Controllers
         [HttpGet]
         public ResponseDto Get()
         {
+            var key = "cacheData";
             try
             {
-                IEnumerable<Coupon> objList = _db.Coupons.ToList();
-                _response.Result = _mapper.Map<IEnumerable<CouponDto>>(objList);
+                if (_cache.TryGetValue(key, out var value))
+                {
+                    _response.Result = value;
+                }
+                else
+                {
+                    IEnumerable<Coupon> objList = _db.Coupons.ToList();
+                    value = _mapper.Map<IEnumerable<CouponDto>>(objList);
+
+                    var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5)) // Keep in cache for 5 minutes
+                    .SetAbsoluteExpiration(TimeSpan.FromHours(1)); // Absolute expiration after 1 hour
+
+                    // Save data in cache
+                    _cache.Set(key, value, cacheEntryOptions);
+                    _response.Result = value;
+                }   
             }
             catch (Exception ex)
             {
+                RemoveCache(key);
                 _response.IsSuccess = false;
                 _response.Message = ex.Message;
             }
             return _response;
+        }
+
+        private void RemoveCache(string key)
+        {
+            _cache.Remove(key);
         }
 
         [HttpGet]
