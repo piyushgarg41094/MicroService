@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Mango.Services.ShoppingCartAPI.Cache;
 using Mango.Services.ShoppingCartAPI.Data;
 using Mango.Services.ShoppingCartAPI.Models;
 using Mango.Services.ShoppingCartAPI.Models.Dto;
@@ -20,15 +21,16 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
         private readonly AppDbContext _db;
         private IProductService _productService;
         private ICouponService _couponService;
+        private readonly CacheProvider _cacheProvider;
         public CartAPIController(IMapper mapper, AppDbContext db, 
-            IProductService productService, ICouponService couponService)
+            IProductService productService, ICouponService couponService, CacheProvider cacheProvider)
         {
             _response = new ResponseDto();
             _mapper = mapper;
             _db = db;
             _productService = productService;
             _couponService = couponService;
-
+            _cacheProvider = cacheProvider;
         }
 
         [HttpGet("GetCart/{userId}")]
@@ -40,8 +42,18 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                 {
                     CartHeader = _mapper.Map<CartHeaderDto>(_db.CartHeaders.First(u => u.UserId == userId))
                 };
-                cart.CartDetails = _mapper.Map<IEnumerable<CartDetailsDto>>(_db.CartDetails
+
+                var cache = _cacheProvider.Get<IEnumerable<CartDetailsDto>>(CacheKeys.CartDetailsKey);
+                if (cache == null)
+                {
+                    cart.CartDetails = _mapper.Map<IEnumerable<CartDetailsDto>>(_db.CartDetails
                     .Where(u => u.CartHeaderId == cart.CartHeader.CartHeaderId));
+                    _cacheProvider.Set(CacheKeys.CartDetailsKey, cart.CartDetails, 60);
+                }
+                else
+                {
+                    cart.CartDetails = cache;
+                }
 
                 IEnumerable<ProductDto> productDtos = await _productService.GetProducts();
 
@@ -67,6 +79,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
             {
                 _response.Message = ex.Message.ToString();
                 _response.IsSuccess = false;
+                _cacheProvider.Remove(CacheKeys.CartDetailsKey);
             }
             return _response;
         }
