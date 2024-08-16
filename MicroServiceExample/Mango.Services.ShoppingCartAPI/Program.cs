@@ -34,7 +34,7 @@ builder.Services.AddScoped<ICouponService, CouponService>();
 
 //-----------------------------Start: Cache----------------------------------------------------
 builder.Services.AddMemoryCache();
-builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("IP Address of server where cache is stored"));
+//builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("IP Address of server where cache is stored"));
 //-----------------------------End: Cache------------------------------------------------------
 
 builder.Services.AddControllers();

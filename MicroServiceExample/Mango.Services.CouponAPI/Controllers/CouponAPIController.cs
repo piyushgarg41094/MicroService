@@ -13,47 +13,47 @@ namespace Mango.Services.CouponAPI.Controllers
 {
     [Route("api/coupon")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class CouponAPIController : ControllerBase
     {
         private readonly AppDbContext _db;
         private ResponseDto _response;
         private IMapper _mapper;
-        private readonly IConnectionMultiplexer _redis;
+        //private readonly IConnectionMultiplexer _redis;
         private readonly IMemoryCache _cache;
         public CouponAPIController(AppDbContext db, IMapper mapper, 
-            IConnectionMultiplexer redis, 
+            //IConnectionMultiplexer redis, 
             IMemoryCache cache)
         {
             _db = db;
             _response = new ResponseDto();
             _mapper = mapper;
-            _redis = redis;
+            //_redis = redis;
             _cache = cache;
         }
 
-        [HttpGet("GetThroughRedis")]
-        public ResponseDto GetThroughRedis()
-        {
-            var db = _redis.GetDatabase();
+        //[HttpGet("GetThroughRedis")]
+        //public ResponseDto GetThroughRedis()
+        //{
+        //    var db = _redis.GetDatabase();
 
-            //redis cache key
-            string redisKey = "redisKey";
+        //    //redis cache key
+        //    string redisKey = "redisKey";
 
-            //Set a cache value
-            db.StringSet(redisKey, "Hello Redis");
+        //    //Set a cache value
+        //    db.StringSet(redisKey, "Hello Redis");
 
-            //Get the Cache Value
-            var value = db.StringGet(redisKey);
+        //    //Get the Cache Value
+        //    var value = db.StringGet(redisKey);
 
-            //set cache with expiration time
-            db.StringSet(redisKey, "Hello Redis", TimeSpan.FromMinutes(5));
+        //    //set cache with expiration time
+        //    db.StringSet(redisKey, "Hello Redis", TimeSpan.FromMinutes(5));
 
-            //remove cache
-            db.KeyDelete(redisKey);
+        //    //remove cache
+        //    db.KeyDelete(redisKey);
 
-            return _response;
-        }
+        //    return _response;
+        //}
 
 
         [HttpGet]

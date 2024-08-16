@@ -1,4 +1,6 @@
-﻿using Mango.Web.Models;
+﻿using Grpc.Net.Client;
+using GrpcExternalAPIService;
+using Mango.Web.Models;
 using Mango.Web.Service.IService;
 using static Mango.Web.Utility.SD;
 
@@ -7,6 +9,7 @@ namespace Mango.Web.Service
     public class CouponService : ICouponService
     {
         private readonly IBaseService _baseService;
+
         public CouponService(IBaseService baseService)
         {
 
@@ -36,7 +39,18 @@ namespace Mango.Web.Service
 
         public async Task<ResponseDto?> GetAllCouponsAsync()
         {
-            return await _baseService.SendAsync(new RequestDto()
+            var channel = GrpcChannel.ForAddress("http://localhost:5193");
+            var client = new APIService.APIServiceClient(channel);
+
+            var apiRequest = new APIRequest
+            {
+                Method ="Get",
+                Url = CouponAPIBase + "/api/coupon"
+            };
+
+			var response = await client.CallExternalAPIAsync(apiRequest);
+
+			return await _baseService.SendAsync(new RequestDto()
             {
                 ApiType = ApiType.GET,
                 Url = CouponAPIBase + "/api/coupon"

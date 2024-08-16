@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcExternalAPIService";
+
+package greet;
+
+// The greeting service definition.
+service APIService {
+  // Sends a greeting
+  rpc CallExternalAPI (APIRequest) returns (APIResponse);
+}
+
+// The request message containing the user's name.
+message APIRequest {
+  string url = 1;
+  string method = 2; // GET, POST, etc.
+  string body = 3;   // Optional body for POST requests.
+}
+
+// The response message containing the greetings.
+message APIResponse {
+  string response_body = 1;
+  int32 status_code = 2;
+}

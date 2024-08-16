@@ -25,7 +25,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 //--------------------------------------------------------------------------------------------
 
 //----------------------Start: Implement Redis Cachce-------------------------------------------------
-builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("localhost:6379"));
+//builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("localhost:6379"));
 //----------------------End: Implement Redis Cachce---------------------------------------------------
 
 //----------------------Start: Implement In-Memory Cache-----------------------------------------------
