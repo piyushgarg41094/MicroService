@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Mango.Services.CouponAPI.CQRS;
 using Mango.Services.CouponAPI.Data;
 using Mango.Services.CouponAPI.Models;
 using Mango.Services.CouponAPI.Models.Dto;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,15 +23,18 @@ namespace Mango.Services.CouponAPI.Controllers
         private IMapper _mapper;
         //private readonly IConnectionMultiplexer _redis;
         private readonly IMemoryCache _cache;
+        private readonly IMediator _mediator;
         public CouponAPIController(AppDbContext db, IMapper mapper, 
             //IConnectionMultiplexer redis, 
-            IMemoryCache cache)
+            IMemoryCache cache,
+            IMediator mediator)
         {
             _db = db;
             _response = new ResponseDto();
             _mapper = mapper;
             //_redis = redis;
             _cache = cache;
+            _mediator = mediator;
         }
 
         //[HttpGet("GetThroughRedis")]
@@ -96,19 +101,21 @@ namespace Mango.Services.CouponAPI.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
-        public ResponseDto Get(int id)
+        public async Task<ResponseDto> Get(int id)
         {
-            try
-            {
-                Coupon obj = _db.Coupons.First(u => u.CouponId == id);
-                _response.Result = _mapper.Map<CouponDto>(obj);
-            }
-            catch (Exception ex)
-            {
-                _response.IsSuccess = false;
-                _response.Message = ex.Message;
-            }
-            return _response;
+            var response = await _mediator.Send(new GetCouponByIdQuery() { Id = id });
+            return response;
+            //try
+            //{
+            //    Coupon obj = _db.Coupons.First(u => u.CouponId == id);
+            //    _response.Result = _mapper.Map<CouponDto>(obj);
+            //}
+            //catch (Exception ex)
+            //{
+            //    _response.IsSuccess = false;
+            //    _response.Message = ex.Message;
+            //}
+            //return _response;
         }
 
         [HttpGet]
@@ -130,22 +137,25 @@ namespace Mango.Services.CouponAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
-        public ResponseDto Post([FromBody] CouponDto couponDto)
+        public async Task<ResponseDto> Post([FromBody] CouponDto couponDto)
         {
-            try
-            {
-                Coupon obj = _mapper.Map<Coupon>(couponDto);
-                _db.Coupons.Add(obj);
-                _db.SaveChanges();
+            var addCouponCommand = _mapper.Map<CreateCouponCommand>(couponDto);
+            var response = await _mediator.Send(addCouponCommand);
+            return response;
+            //try
+            //{
+            //    Coupon obj = _mapper.Map<Coupon>(couponDto);
+            //    _db.Coupons.Add(obj);
+            //    _db.SaveChanges();
 
-                _response.Result = _mapper.Map<CouponDto>(obj);
-            }
-            catch (Exception ex)
-            {
-                _response.IsSuccess = false;
-                _response.Message = ex.Message;
-            }
-            return _response;
+            //    _response.Result = _mapper.Map<CouponDto>(obj);
+            //}
+            //catch (Exception ex)
+            //{
+            //    _response.IsSuccess = false;
+            //    _response.Message = ex.Message;
+            //}
+            //return _response;
         }
 
         [HttpPut]

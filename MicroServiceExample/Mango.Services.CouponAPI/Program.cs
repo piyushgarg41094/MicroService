@@ -1,5 +1,6 @@
 using AutoMapper;
 using Mango.Services.CouponAPI;
+using Mango.Services.CouponAPI.CQRS.Handlers;
 using Mango.Services.CouponAPI.Data;
 using Mango.Services.CouponAPI.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -8,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
 using System.Text;
+using MediatR;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +34,10 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 //----------------------Start: Implement In-Memory Cache-----------------------------------------------
 builder.Services.AddMemoryCache();
 //----------------------End: Implement In-Memory Cache-------------------------------------------------
+
+//-----------------------Start: Implement CQRS---------------------------------------------------------
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+//-----------------------End: Implement CQRS---------------------------------------------------------
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
