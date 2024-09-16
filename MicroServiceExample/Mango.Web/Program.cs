@@ -1,3 +1,4 @@
+using Mango.Web.Middlewares;
 using Mango.Web.Service;
 using Mango.Web.Service.IService;
 using Mango.Web.Utility;
@@ -34,6 +35,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 var app = builder.Build();
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
