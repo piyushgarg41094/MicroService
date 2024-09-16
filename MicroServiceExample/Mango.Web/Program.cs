@@ -4,12 +4,14 @@ using Mango.Web.Service;
 using Mango.Web.Service.IService;
 using Mango.Web.Utility;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 //If we don't want to apply filter attribute over all controller the we put here to apply all controllers
-builder.Services.AddControllersWithViews(Options => Options.Filters.Add<ErrorHandlingFilterAttribute>());
+//builder.Services.AddControllersWithViews(Options => Options.Filters.Add<ErrorHandlingFilterAttribute>());
+builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 
@@ -38,12 +40,18 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 var app = builder.Build();
 
-app.UseMiddleware<ErrorHandlingMiddleware>();
+//app.UseMiddleware<ErrorHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
+app.UseExceptionHandler("/error");
+//below is used if we want to create minimal api instead of full api
+//app.Map("/error", (HttpContext httpContext) =>
+//{
+//    Exception? exception = httpContext.Features.Get<IExceptionHandlerFeature>().Error;
+//    return Results.Problem();
+//});
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
