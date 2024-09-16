@@ -1,3 +1,4 @@
+using Mango.Web.Filters;
 using Mango.Web.Middlewares;
 using Mango.Web.Service;
 using Mango.Web.Service.IService;
@@ -7,7 +8,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+//If we don't want to apply filter attribute over all controller the we put here to apply all controllers
+builder.Services.AddControllersWithViews(Options => Options.Filters.Add<ErrorHandlingFilterAttribute>());
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 
