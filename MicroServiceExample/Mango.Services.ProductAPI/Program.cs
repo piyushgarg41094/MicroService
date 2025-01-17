@@ -4,6 +4,7 @@ using AutoMapper;
 using Mango.Services.ProductAPI;
 using Mango.Services.ProductAPI.Data;
 using Mango.Services.ProductAPI.Extensions;
+using Mango.Services.ProductAPI.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -28,6 +29,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddScoped<TransactionAsyncActionFilter>();
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme

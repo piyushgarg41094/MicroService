@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Mango.Services.ProductAPI.Data;
+using Mango.Services.ProductAPI.Filters;
 using Mango.Services.ProductAPI.Models;
 using Mango.Services.ProductAPI.Models.Dto;
 using Microsoft.AspNetCore.Authorization;
@@ -23,6 +24,7 @@ namespace Mango.Services.ProductAPI.Controllers
         }
 
         [HttpGet]
+        [TransactionFilter]
         public ResponseDto Get()
         {
             try
