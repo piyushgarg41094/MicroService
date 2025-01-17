@@ -1,3 +1,5 @@
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using AutoMapper;
 using Mango.Services.ProductAPI;
 using Mango.Services.ProductAPI.Data;
@@ -54,12 +56,46 @@ builder.Services.AddSwaggerGen(options =>
 builder.AddAppAuthentication();
 builder.Services.AddAuthorization();
 
+//always add before builder.build()
+//configure API Versioning
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new Asp.Versioning.ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    //by setting to true API versioning is set to introduce response header to all of my api calls indicating what are the supported api versions and what are the deprecated api versions
+    options.ReportApiVersions = true;
+    //It is essentailly to set up which type of api versioning you want to use
+    //options.ApiVersionReader = new UrlSegmentApiVersionReader();
+    // to combine multiple type
+    options.ApiVersionReader = ApiVersionReader.Combine(
+        new UrlSegmentApiVersionReader(),
+        new HeaderApiVersionReader("x-api-version"),
+        new MediaTypeApiVersionReader("x-api-version"));
+
+})
+    .AddApiExplorer(options =>
+    {
+        options.GroupNameFormat = "'v'VVV";
+        options.SubstituteApiVersionInUrl = true;
+    });
+
 var app = builder.Build();
+
+//to show v1 version in swagger
+//var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
+    //app.UseSwaggerUI(options =>
+    //{
+    //    foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+    //    {
+    //        options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
+    //            description.GroupName.ToUpperInvariant());
+    //    }
+    //});
     app.UseSwaggerUI();
 }
 
