@@ -10,9 +10,11 @@ namespace Mango.Web.Controllers
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
-        public ProductController(IProductService productService)
+        private readonly ILogger<HomeController> _logger;
+        public ProductController(IProductService productService, ILogger<HomeController> logger)
         {
             _productService = productService;
+            _logger = logger;
         }
         public async Task<IActionResult> ProductIndex()
         {
@@ -39,6 +41,7 @@ namespace Mango.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                _logger.LogInformation("Creating a product");
                 ResponseDto? response = await _productService.CreateProductsAsync(model);
                 if (response != null && response.IsSuccess)
                 {
