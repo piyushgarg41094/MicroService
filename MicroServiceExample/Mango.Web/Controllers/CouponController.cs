@@ -1,4 +1,5 @@
-﻿using Mango.Web.Filters;
+﻿using Mango.Web.ExternalService.Interfaces;
+using Mango.Web.Filters;
 using Mango.Web.Models;
 using Mango.Web.Service.IService;
 using Microsoft.AspNetCore.Mvc;
@@ -11,14 +12,18 @@ namespace Mango.Web.Controllers
     public class CouponController : Controller
     {
         private readonly ICouponService _couponService;
-        public CouponController(ICouponService couponService)
+        private readonly ICouponServiceRefit _couponServiceRefit;
+        public CouponController(ICouponService couponService, ICouponServiceRefit couponServiceRefit)
         {
             _couponService = couponService;
+            _couponServiceRefit = couponServiceRefit;
         }
         public async Task<IActionResult> CouponIndex()
         {
             List<CouponDto>? list = new();
             ResponseDto? response = await _couponService.GetAllCouponsAsync();
+            var responseOfRefit = await _couponServiceRefit.GetCouponsBycode("XXZZ");
+            var data = responseOfRefit.Data;
             if(response != null && response.IsSuccess)
             {
                 list = JsonConvert.DeserializeObject<List<CouponDto>>(Convert.ToString(response.Result));

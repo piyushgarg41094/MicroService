@@ -1,3 +1,5 @@
+using Mango.Web.Common.Options;
+using Mango.Web.ExternalService;
 using Mango.Web.Filters;
 using Mango.Web.Middlewares;
 using Mango.Web.Service;
@@ -5,6 +7,8 @@ using Mango.Web.Service.IService;
 using Mango.Web.Utility;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.Extensions.Configuration;
+using Refit;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,8 +48,15 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/Auth/Login";
         options.AccessDeniedPath = "/Auth/AccessDenied";
     });
-
 var app = builder.Build();
+
+var couponSettings = builder.Configuration.GetSection("AccountProviderSetting").Get<CouponProviderSetting>();
+builder.Services.AddRefitClient<ICouponServiceClient>()
+.ConfigureHttpClient(httpClient =>
+{
+    httpClient.BaseAddress = new Uri(couponSettings.Url);
+    httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", couponSettings.Token);
+});
 
 //app.UseMiddleware<ErrorHandlingMiddleware>();
 
