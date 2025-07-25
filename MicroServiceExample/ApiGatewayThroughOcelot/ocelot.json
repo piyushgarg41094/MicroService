@@ -1,0 +1,33 @@
+﻿{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/admin/v1/product", //It is an incoming request it recieves
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ProductApi",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "api/product" //It is the path where it redirect the incoming request
+    },
+    {
+      "UpstreamPathTemplate": "/admin/v1/product/{id}",
+      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ProductApi",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "api/product/{id}"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl":  "http://localhost:800"
+  }
+}
